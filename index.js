@@ -4,10 +4,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { Server } from 'socket.io';
 import fs from 'fs';
-import { configDotenv } from "dotenv";
-
-
-configDotenv();
+import { rm } from 'fs/promises'; // Import rm from fs/promises for directory deletion
 
 const app = express();
 const server = createServer(app);
@@ -15,8 +12,6 @@ const io = new Server(server, {
   maxHttpBufferSize: 1e8, // 100 MB
   connectionStateRecovery: {}
 });
-
-const PORT = process.env.PORT || 3010;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -82,20 +77,26 @@ io.on('connection', (socket) => {
   // Handle file uploads
   socket.on('upload', ({ fileName, fileData }, roomId, userId, callback) => {
     console.log("upload from js start")
+    // Create a directory for the room if it doesn't exist
+    const roomDir = join(uploadsDir, roomId);
+    if (!fs.existsSync(roomDir)) {
+      fs.mkdirSync(roomDir);
+    }
+
     // Generate unique filename based on current date and random number
     const fileExt = fileName.split('.').pop(); // Get file extension
     const randomDigits = Math.floor(Math.random() * 1000).toString().padStart(3, '0'); // Generate 3-digit random number
     const currentDate = new Date().toISOString().replace(/[-:]/g, '').replace('T', '').split('.')[0]; // Format current date
     const newFileName = `${currentDate}-${randomDigits}-${fileName}`; // Construct new filename
 
-    const filePath = join(uploadsDir, newFileName);
+    const filePath = join(roomDir, newFileName);
     fs.writeFile(filePath, Buffer.from(fileData), (err) => {
       if (err) {
         console.error(err);
         callback('File upload failed');
         return;
       }
-      const fileUrl = `/uploads/${newFileName}`;
+      const fileUrl = `/uploads/${roomId}/${newFileName}`;
       io.to(roomId).emit('file upload', { userId, fileName: newFileName, fileUrl }); // Emit new filename
       callback('File upload successful');
     });
@@ -104,7 +105,7 @@ io.on('connection', (socket) => {
   });
 
   // Handle disconnection
-  socket.on('disconnect', () => {
+  socket.on('disconnect', async () => {
     if (socket.roomId && socket.userId) {
       const { roomId, userId } = socket;
       console.log(`User ${userId} disconnected from room ${roomId}`);
@@ -114,6 +115,16 @@ io.on('connection', (socket) => {
         users[roomId] = users[roomId].filter(user => user !== userId);
         if (users[roomId].length === 0) {
           delete users[roomId];
+          // Delete the room directory if it exists
+          const roomDir = join(uploadsDir, roomId);
+          if (fs.existsSync(roomDir)) {
+            try {
+              await rm(roomDir, { recursive: true, force: true });
+              console.log(`Directory ${roomDir} deleted`);
+            } catch (err) {
+              console.error(`Failed to delete directory ${roomDir}: ${err}`);
+            }
+          }
         } else {
           io.to(roomId).emit('notifications', `${userId} has left the room`);
           io.to(roomId).emit('update users', users[roomId]); // Send the updated user list
@@ -123,6 +134,6 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+server.listen(3000, () => {
+  console.log('Server running at http://localhost:3000');
 });
