@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <title>Room Chat</title>
+    <style>
+        /* (existing CSS styles) */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ccc;
+        }
+
+        .background-green {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 20%;
+            background-color: #009688;
+        }
+
+        .main-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 100vh;
+            background: #fff;
+            display: flex;
+            box-shadow: 0px 1px 1px 0 rgba(0, 0, 0, 0.5), 0px 2px 5px 0 rgba(0, 0, 0, 0.6);
+        }
+
+        .main-container .sub-container {
+            position: relative;
+            width: 70%;
+            height: 100%;
+            flex: 70%;
+            background: #e5ddd5;
+        }
+
+        .main-container .sub-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url(https://camo.githubusercontent.com/854a93c27d64274c4f8f5a0b6ec36ee1d053cfcd934eac6c63bed9eaef9764bd/68747470733a2f2f7765622e77686174736170702e636f6d2f696d672f62672d636861742d74696c652d6461726b5f61346265353132653731393562366237333364393131306234303866303735642e706e67);
+            opacity: 0.5;
+        }
+
+
+        .header {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 60px;
+            background: #ededed;
+            padding: 0 15px;
+        }
+
+        .logo-img {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+
+        .dp {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .nav-icons {
+            display: flex;
+            justify-content: flex-end;
+            padding-left: 110px;
+        }
+
+        .nav-icons li {
+            list-style: none;
+            display: flex;
+            cursor: pointer;
+            color: #51585c;
+            margin-left: 22px;
+            font-size: 18px;
+        }
+
+        .notif-box {
+            position: relative;
+            display: flex;
+            width: 100%;
+            height: 70px;
+            background: #76daff;
+            align-items: center;
+            font-size: 0.8em;
+            text-decoration: none;
+        }
+
+        .notif-box i {
+            position: relative;
+            left: 13px;
+            background: #fff;
+            padding: 10px;
+            width: 42px;
+            height: auto;
+            font-size: 20px;
+            border-radius: 55%;
+            cursor: pointer;
+            color: #76daff;
+        }
+
+        .notif-box .fa-xmark {
+            position: absolute;
+            left: 260px;
+            text-align: center;
+            background: #76daff;
+            color: #fff;
+        }
+
+        .notif-text {
+            margin: 25px;
+        }
+
+        .notif-text a {
+            text-decoration: none;
+            color: #333;
+            font-size: 0.9em;
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            height: 40px;
+            background: #f6f6f6;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-container .input input {
+            width: 121%;
+            outline: none;
+            border: none;
+            background: #fff;
+            padding: 5px;
+            height: 30x;
+            border-radius: 10px;
+            font-size: 12px;
+            padding-left: 60px;
+            margin: 10px
+        }
+
+        .search-container .input i {
+            position: absolute;
+            left: 26px;
+            top: 14px;
+            color: #bbb;
+            font-size: 0.8em;
+        }
+
+        .chat-list {
+            position: relative;
+            height: calc(100% - 170px);
+            overflow-y: auto;
+        }
+
+        .chat-list .chat-box {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .chat-list .chat-box .img-box {
+            position: relative;
+            width: 55px;
+            height: 45px;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+
+        .chat-list .chat-box .chat-details {
+            width: 100%;
+            margin-left: 10px;
+        }
+
+        .chat-list .chat-box .chat-details .text-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+
+        .chat-list .chat-box .chat-details .text-head h4 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .chat-list .chat-box .chat-details .text-head .time {
+            font-size: 0.8em;
+            color: #aaa;
+        }
+
+        .chat-list .chat-box .chat-details .text-message {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-list .chat-box .chat-details .text-message p {
+            color: #aaa;
+            font-size: 0.9em;
+            overlay: hidden;
+        }
+
+        img {
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .chat-list .chat-box .chat-details .text-message b {
+            background: #06e744;
+            color: #fff;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 0.8em;
+            font-weight: 400;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chat-list .active {
+            background: #ebebeb;
+        }
+
+        .chat-list .chat-box:hover {
+            background: #f5f5f5;
+        }
+
+        .chat-list .chat-box .chat-details .text-head .unread {
+            color: #06e744;
+        }
+
+        /* sub-container */
+
+        .sub-container .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sub-container .header .img-text .logo-img .dp {
+            position: relative;
+            top: -2px;
+            left: 0px;
+            width: 40px;
+            height: auto;
+            overflow: hidden;
+            object-fit: cover;
+        }
+
+        .sub-container .header .img-text {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .sub-container .header .img-text h4 {
+            font-weight: 500;
+            line-height: 1.2em;
+            margin-left: 15px;
+        }
+
+        .sub-container .header .img-text h4 span {
+            font-size: 0.8em;
+            color: #555;
+        }
+
+        .sub-container .header .nav-icons {
+            position: relative;
+            margin-right: 0px;
+        }
+
+        .sub-container .header .nav-icons i {
+            padding: 10px;
+        }
+
+        .chat-container {
+            position: relative;
+            width: 100%;
+            height: calc(100% - 120px);
+            padding: 50px;
+            overflow-y: auto;
+        }
+
+        .notification {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #e1f5fe;
+            color: #0277bd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-size: 0.9em;
+            text-align: center;
+            user-select: none;
+
+        }
+
+        .message-box {
+            position: relative;
+            display: flex;
+            width: 100%;
+            margin: 5px 0;
+        }
+
+        .message-box p {
+            position: relative;
+            right: 0;
+            text-align: right;
+            max-width: 65%;
+            padding: 12px;
+            background: #dcf8c6;
+            border-radius: 10px;
+            font-size: 0.9em;
+        }
+
+        .message-box.my-message p::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -12px;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #dcf8c6 0%, #dcf8c6 50%, transparent 50%, transparent);
+        }
+
+        .message-box p span {
+            display: block;
+            text-align: left;
+            font-size: 0.8em;
+            opacity: 0.5;
+            user-select: none;
+        }
+
+        .my-message {
+            justify-content: flex-end;
+        }
+
+        .other-message p {
+            background: #fff;
+        }
+
+        .other-message {
+            justify-content: flex-start;
+        }
+
+        .chat-container .my-message i {
+            color: yellow;
+        }
+
+        .message-box.other-message::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -12px;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(225deg, #fff 0%, #fff 50%, transparent 50%, transparent);
+        }
+
+        .chatbox-input {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 60px;
+            background: #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbox-input i {
+            cursor: pointer;
+            font-size: 1.8em;
+            color: #515855;
+        }
+
+        .chatbox-input i:nth-child(1) {
+            margin: 15px;
+        }
+
+        .chatbox-input i:last-child {
+            margin-right: 25px;
+        }
+
+        .chatbox-input input {
+            position: relative;
+            width: 90%;
+            margin: 0 20px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 1em;
+            border: none;
+            outline: none;
+        }
+
+        /* User list styles */
+        .user-list {
+            position: absolute;
+            top: 60px;
+            right: 15px;
+            width: 250px;
+            max-height: 300px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+        }
+
+        .user-list::-webkit-scrollbar {
+            width: 0;
+            /* Remove scrollbar space */
+            background: transparent;
+            /* Optional: just make scrollbar invisible */
+        }
+
+        .user-list ul {
+            list-style: none;
+            padding: 10px;
+        }
+
+        .user-list ul li {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .user-list ul li:last-child {
+            border-bottom: none;
+        }
+
+        .user-list ul li:hover {
+            background: #f5f5f5;
+        }
+
+        /* Hidden file input styling */
+        .hidden-file-input {
+            display: none;
+        }
+
+
+        .submit-button {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-green"></div>
+
+    <div class="main-container">
+        <div class="sub-container">
+            <!--header -->
+            <div class="header">
+                <div class="img-text">
+                    <div class="logo-img">
+                        <img class="dp"
+                            src="https://images.pexels.com/photos/2474307/pexels-photo-2474307.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                            alt="">
+                    </div>
+                    <h4>Logo Name<br><span id="roomIdShow">🏠 RoomId</span></h4>
+                </div>
+                <div class="nav-icons">
+                    <li><i class="fa-solid fa-users" onclick="toggleUserList()"></i></li>
+                </div>
+            </div>
+
+            <!-- User list -->
+            <div class="user-list" id="user-list">
+                <ul >
+                    <!-- dynamic content -->
+                </ul>
+            </div>
+
+            <!--chat-container -->
+            <div id="messages" class="chat-container">
+                <!-- dynamic content -->
+            </div>
+
+            <!--input-bottom -->
+            <form id="form" action="">
+                <div class="chatbox-input">
+                    <i class="fa-solid fa-paperclip" onclick="triggerFileInput()"></i>
+                    <input id="input" autocomplete="off" type="text" placeholder="Type a message">
+                    <input type="file" id="file-input" class="hidden-file-input" >
+                    <button  class="submit-button">
+                        <i class="fa-solid fa-circle-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+        const fileInput = document.getElementById('file-input');
+        const messages = document.getElementById('messages');
+        const userList = document.getElementById('user-list');
+        const userListUl = document.querySelector('.user-list ul');
+        // const showUsersButton = document.getElementById('showUsersButton');
+
+
+
+        // Function to toggle user list visibility
+        function toggleUserList() {
+            // const userList = document.getElementById('user-list');
+            if (userList.style.display === 'none' || userList.style.display === '') {
+                userList.style.display = 'block';
+                // Add event listener to hide user list when clicking outside of it
+                document.body.addEventListener('click', clickOutsideUserList);
+            } else {
+                userList.style.display = 'none';
+            }
+        }
+
+        // Function to hide user list when clicking outside of it
+        function clickOutsideUserList(event) {
+            // const userList = document.getElementById('user-list');
+            const usersBtn = document.querySelector('.nav-icons .fa-users');
+
+            // Check if the clicked element is not the user list or the users button
+            if (!userList.contains(event.target) && event.target !== usersBtn) {
+                userList.style.display = 'none';
+                // Remove event listener after hiding user list
+                document.body.removeEventListener('click', clickOutsideUserList);
+            }
+        }
+
+        // Function to trigger the hidden file input
+        function triggerFileInput() {
+            document.getElementById('file-input').click();
+        }
+
+
+        // ________________________________________________________________________________________________________________________________________________ 
+        const socket = io();
+
+        // Extract roomId and userId from URL
+        const pathParts = window.location.pathname.split('/');
+        const roomId = pathParts[1];
+        const userId = pathParts[2];
+        console.log(`Room ID: ${roomId}, User ID: ${userId}`);
+        document.getElementById("roomIdShow").textContent= `🏠 ${roomId}`;
+
+        // Join the room
+        socket.emit('join room', roomId, userId, (response) => {
+            if (response.status === 'error') {
+                alert(response.message);
+                window.location.href = '/'; // Redirect to home or some other page
+            }
+        });
+
+        // Log connection status
+        socket.on('connect', () => {
+            console.log('Connected to server');
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Disconnected from server');
+        });
+
+
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (input.value) {
+                console.log('Sending message:', input.value);
+                socket.emit('chat message', input.value, roomId, userId); // Emit message to server with roomId and userId
+                input.value = '';
+            }
+            console.log("form data send")
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                upload(file);
+            }
+        });
+
+        function upload(file) {
+            console.log("upload from home start")
+            const reader = new FileReader();
+            reader.onload = () => {
+                const data = reader.result;
+                socket.emit('upload', { fileName: file.name, fileData: data }, roomId, userId, (status) => {
+                    console.log(status);
+                    if (status === 'File upload successful') {
+                        fileInput.value = ''; // Clear the file input
+                    }
+                });
+            };
+            reader.readAsArrayBuffer(file);
+            console.log("upload from home end")
+        }
+
+        socket.on('chat message', (msg) => {
+            console.log('Received message adding to ui:', msg);
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message-box');
+            if (userId === msg.split(':')[0]) {
+                messageDiv.classList.add('my-message');
+            } else {
+                messageDiv.classList.add('other-message');
+            }
+
+            const paragraph = document.createElement('p');
+            if (userId !== msg.split(':')[0]) {
+                const span = document.createElement('span');
+            span.textContent = `~${msg.split(':')[0]}`;
+            paragraph.appendChild(span);
+            }
+            const messageText = document.createTextNode(msg.split(':')[1]);
+            paragraph.appendChild(messageText);
+            messageDiv.appendChild(paragraph);
+            messages.appendChild(messageDiv);
+            // window.scrollTo(0, document.body.scrollHeight);
+            messages.scrollTop = messages.scrollHeight;
+
+        });
+        socket.on('notifications', (msg) => {
+            console.log('notifications:', msg);
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('notification');
+            const paragraph = document.createElement('p');
+            const messageText = document.createTextNode(msg);
+            paragraph.appendChild(messageText);
+            messageDiv.appendChild(paragraph);
+            messages.appendChild(messageDiv);
+            // window.scrollTo(0, document.body.scrollHeight);
+            messages.scrollTop = messages.scrollHeight;
+
+
+        });
+
+        
+        socket.on('file upload', ({ userId: senderId, fileName, fileUrl }) => {
+            
+            console.log("file upload from home start")
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message-box');
+            messageDiv.classList.add(userId === senderId ? 'my-message' : 'other-message');
+            const paragraph = document.createElement('p');
+            const link = document.createElement('a');
+            link.href = fileUrl;
+            link.download = fileName;
+            link.textContent = `${fileName}`;
+
+            if (userId !== senderId) {
+                const span = document.createElement('span');
+            span.textContent = `~${senderId}`;
+            paragraph.appendChild(span);
+            }
+
+            paragraph.appendChild(link);
+            messageDiv.appendChild(paragraph);
+            messages.appendChild(messageDiv);
+            
+            // window.scrollTo(0, document.body.scrollHeight);
+            messages.scrollTop = messages.scrollHeight;
+            console.log("file upload from home end")
+        });
+
+        socket.on('update users', (users) => {
+            console.log('Users in room:', users);
+            userListUl.innerHTML = '';
+            users.forEach(user => {
+                const item = document.createElement('li');
+                item.textContent = user;
+                userListUl.appendChild(item);
+            });
+        });
+    </script>
+</body>
+
+</html>
