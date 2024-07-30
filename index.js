@@ -5,6 +5,7 @@ import { dirname, join } from 'path';
 import { Server } from 'socket.io';
 import fs from 'fs';
 import { rm } from 'fs/promises'; // Import rm from fs/promises for directory deletion
+import { configDotenv } from 'dotenv';
 
 const app = express();
 const server = createServer(app);
@@ -12,6 +13,10 @@ const io = new Server(server, {
   maxHttpBufferSize: 1e8, // 100 MB
   connectionStateRecovery: {}
 });
+
+const PORT = process.env.PORT || 3000;
+
+configDotenv();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -134,6 +139,6 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(3000, () => {
+server.listen(PORT, () => {
   console.log('Server running at http://localhost:3000');
 });
