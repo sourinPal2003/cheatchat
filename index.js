@@ -120,7 +120,7 @@ io.on('connection', (socket) => {
           if (fs.existsSync(roomDir)) {
             try {
               await rm(roomDir, { recursive: true, force: true });
-              console.log(`Directory ${roomDir} deleted`);
+              console.log(`Directory ${roomDir} deleted successfully`);
             } catch (err) {
               console.error(`Failed to delete directory ${roomDir}: ${err}`);
             }
