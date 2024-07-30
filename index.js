@@ -14,9 +14,9 @@ const io = new Server(server, {
   connectionStateRecovery: {}
 });
 
-const PORT = process.env.PORT || 3000;
-
 configDotenv();
+
+const PORT = process.env.PORT || 3000;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -140,5 +140,5 @@ io.on('connection', (socket) => {
 });
 
 server.listen(PORT, () => {
-  console.log('Server running at http://localhost:3000');
+  console.log(`Server running at http://localhost:${PORT}`);
 });
