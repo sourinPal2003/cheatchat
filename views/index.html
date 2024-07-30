@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <title>Enter Room</title>
     <style>
-        /* Same CSS styles as in the chat HTML file */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
         * {
@@ -54,11 +53,11 @@
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0px 1px 1px 0 rgba(0, 0, 0, 0.5), 0px 2px 5px 0 rgba(0, 0, 0, 0.6);
+            text-align: center;
         }
 
         .form-container h2 {
             margin-bottom: 20px;
-            text-align: center;
             color: #009688;
         }
 
@@ -89,6 +88,30 @@
         .form-container form button:hover {
             background: #00796b;
         }
+
+        .company-info {
+            margin-top: 20px;
+        }
+
+        .company-info img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .developer-info {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        .developer-info a {
+            color: #009688;
+            text-decoration: none;
+        }
+
+        .developer-info a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -96,12 +119,19 @@
     <div class="background-green"></div>
     <div class="main-container">
         <div class="form-container">
+            <div class="company-info">
+                <img src="https://res.cloudinary.com/dxlpcb1iw/image/upload/v1722102491/rrjtfwbnums3rjfh9din.png" alt="Company Logo">
+                
+            </div>
             <h2>Enter Chat Room</h2>
             <form id="enter-room-form">
                 <input type="text" id="room-name" placeholder="Room Name" required>
                 <input type="text" id="user-name" placeholder="User Name" required>
                 <button type="submit">Join Room</button>
             </form>
+            <div class="developer-info">
+                Developed by <a href="https://www.linkedin.com/in/sourin-pal" target="_blank">~Sourin Pal</a>
+            </div>
         </div>
     </div>
 
