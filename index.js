@@ -6,6 +6,7 @@ import { Server } from 'socket.io';
 import fs from 'fs';
 import { rm } from 'fs/promises'; // Import rm from fs/promises for directory deletion
 import { configDotenv } from 'dotenv';
+import startPinging from './services/pingingTheServer.js';
 
 const app = express();
 const server = createServer(app);
@@ -37,6 +38,10 @@ app.get('/', (req, res) => {
 // Serve the home.html file for any room and user
 app.get('/:roomId/:userId', (req, res) => {
   res.sendFile(join(__dirname, 'views', 'home.html'));
+});
+
+app.get('/ping', (req, res) => {
+  res.send('pong');
 });
 
 const users = {}; // Store users by roomId
@@ -141,4 +146,5 @@ io.on('connection', (socket) => {
 
 server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
+  startPinging();
 });
